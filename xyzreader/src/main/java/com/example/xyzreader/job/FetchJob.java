@@ -42,7 +42,7 @@ public class FetchJob extends Job {
 
 
 
-    protected FetchJob() {
+    public FetchJob() {
         // This job requires network connectivity,
         // and should be persisted in case the application exits before job is completed.
         super(new Params(Priority.MID).requireNetwork().singleInstanceBy("update-data"));

@@ -3,6 +3,7 @@ package com.example.xyzreader.di;
 import com.example.xyzreader.job.FetchJob;
 import com.example.xyzreader.services.MyGcmJobService;
 import com.example.xyzreader.services.MyJobService;
+import com.example.xyzreader.ui.ArticleListFragment;
 
 import javax.inject.Singleton;
 
@@ -19,4 +20,6 @@ public interface ApplicationComponent {
     void inject(MyJobService myJobService);
 
     void inject(MyGcmJobService myGcmJobService);
+
+    void inject(ArticleListFragment articleListFragment);
 }

@@ -1,5 +1,6 @@
 package com.example.xyzreader.services;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.birbit.android.jobqueue.JobManager;
@@ -16,7 +17,8 @@ public class MyGcmJobService extends GcmJobSchedulerService {
     JobManager jobManager;
 
     public MyGcmJobService() {
-        ((ArticleApplication) getApplication()).getComponent().inject(this);
+        Context context = getApplicationContext();
+        ((ArticleApplication)context).getComponent().inject(this);
     }
 
     @NonNull

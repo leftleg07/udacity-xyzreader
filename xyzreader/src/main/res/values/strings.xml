@@ -9,4 +9,8 @@
 
     <string name="up">Up</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_article_list">No Article Information Available</string>
+
 </resources>

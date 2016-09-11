@@ -68,7 +68,7 @@ public class FetchJobTest {
     }
 
     @Subscribe
-    public void onEvent(JobEvent event) {
+    public void onEvent(FetchJobEvent event) {
         mSignal.countDown();
     }
 

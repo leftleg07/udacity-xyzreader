@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.Time;
 import android.util.Log;
 
 import com.birbit.android.jobqueue.Job;
@@ -19,6 +20,8 @@ import com.example.xyzreader.di.ApplicationComponent;
 import com.example.xyzreader.network.ReaderData;
 import com.example.xyzreader.network.XYZReaderService;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,11 +63,14 @@ public class FetchJob extends Job {
         try {
             ArrayList batch = buildReaderDataBatchOperation(data);
             if (batch != null && batch.size() > 0) {
+                EventBus.getDefault().post(new FetchJobEvent(true));
                 mContentResolver.applyBatch(ItemProvider.AUTHORITY, batch);
                 mContentResolver.notifyChange(
                         ItemProvider.Item.CONTENT_URI, // URI where data was modified
                         null,                           // No local observer
                         false);                         // IMPORTANT: Do not sync to network
+            } else {
+                EventBus.getDefault().post(new FetchJobEvent(false));
             }
         } catch (RemoteException | OperationApplicationException e) {
             Log.e(LOG_TAG, "Error applying batch insert", e);
@@ -87,7 +93,7 @@ public class FetchJob extends Job {
     }
 
     public ArrayList buildReaderDataBatchOperation(ReaderData[] data) {
-
+        Time time = new Time();
         final ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
 
         // Build hash table of incoming entries
@@ -126,7 +132,7 @@ public class FetchJob extends Job {
                             .withValue(ItemColumns.THUMB_URL, match.mThumb)
                             .withValue(ItemColumns.PHOTO_URL, match.mPhoto)
                             .withValue(ItemColumns.ASPECT_RATIO, match.mAspectRatio)
-                            .withValue(ItemColumns.PUBLISHED_DATE, match.mPublishedDate)
+                            .withValue(ItemColumns.PUBLISHED_DATE, time.parse3339(match.mPublishedDate))
                             .build());
                 } else {
                     Log.i(LOG_TAG, "No action: " + existingUri);
@@ -150,7 +156,7 @@ public class FetchJob extends Job {
                     .withValue(ItemColumns.THUMB_URL, entry.mThumb)
                     .withValue(ItemColumns.PHOTO_URL, entry.mPhoto)
                     .withValue(ItemColumns.ASPECT_RATIO, entry.mAspectRatio)
-                    .withValue(ItemColumns.PUBLISHED_DATE, entry.mPublishedDate)
+                    .withValue(ItemColumns.PUBLISHED_DATE, time.parse3339(entry.mPublishedDate))
                     .build());
         }
 

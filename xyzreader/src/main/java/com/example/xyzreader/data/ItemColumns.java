@@ -37,6 +37,6 @@ public class ItemColumns {
     @DataType(DataType.Type.REAL) @NotNull @DefaultValue("1.5")
     public static final String ASPECT_RATIO = "aspect_ratio";
     /** Type: INTEGER NOT NULL DEFAULT 0 */
-    @DataType(DataType.Type.TEXT) @NotNull
+    @DataType(DataType.Type.INTEGER) @NotNull @DefaultValue("0")
     public static final String PUBLISHED_DATE = "published_date";
 }

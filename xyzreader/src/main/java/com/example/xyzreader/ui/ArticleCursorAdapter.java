@@ -1,7 +1,9 @@
 package com.example.xyzreader.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ItemColumns;
+import com.example.xyzreader.data.ItemProvider;
 import com.example.xyzreader.util.CursorRecyclerViewAdapter;
 
 import butterknife.BindView;
@@ -42,14 +45,26 @@ public class ArticleCursorAdapter extends CursorRecyclerViewAdapter<ArticleCurso
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final Cursor cursor) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id = cursor.getString(cursor.getColumnIndex(ItemColumns.SERVER_ID));
+                Uri uri = ItemProvider.Item.withServerId(id);
+                Context context = v.getContext();
+                Intent intent = new Intent(context, ArticleDetailActivity.class);
+                intent.setData(uri);
+                context.startActivity(intent);
+            }
+        });
         holder.titleView.setText(cursor.getString(cursor.getColumnIndex(ItemColumns.TITLE)));
         holder.subtitleView.setText(
                 DateUtils.getRelativeTimeSpanString(
                         cursor.getLong(cursor.getColumnIndex(ItemColumns.PUBLISHED_DATE)),
                         System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                        DateUtils.FORMAT_ABBREV_ALL).toString()
-                        + " by "
-                        + cursor.getString(cursor.getColumnIndex(ItemColumns.AUTHOR)));
+                        DateUtils.FORMAT_ABBREV_ALL).toString());
+
+        holder.authoView.setText(cursor.getString(cursor.getColumnIndex(ItemColumns.AUTHOR)));
 
         String url = cursor.getString(cursor.getColumnIndex(ItemColumns.THUMB_URL));
         Glide.with(mContext).load(url).into(holder.thumbnailView);
@@ -71,6 +86,9 @@ public class ArticleCursorAdapter extends CursorRecyclerViewAdapter<ArticleCurso
 
         @BindView(R.id.article_subtitle)
         public TextView subtitleView;
+
+        @BindView(R.id.article_author)
+        public TextView authoView;
 
         public ViewHolder(View view) {
             super(view);

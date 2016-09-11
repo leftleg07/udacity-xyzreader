@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -22,13 +23,16 @@ import com.birbit.android.jobqueue.JobManager;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ItemProvider;
 import com.example.xyzreader.job.FetchJob;
+import com.example.xyzreader.job.FetchJobEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,12 +84,7 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
             @Override
             public void onRefresh() {
                 Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-                try {
-                    MILLISECONDS.sleep(600);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                mJobManager.addJobInBackground(new FetchJob());
             }
         });
 
@@ -94,7 +93,7 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((ArticleListActivity)getContext()).getComponent().inject(this);
+        ((ArticleListActivity) getContext()).getComponent().inject(this);
         mJobManager.addJobInBackground(new FetchJob());
     }
 
@@ -105,6 +104,35 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFetchJobEvent(FetchJobEvent event) {
+        if(mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            String message;
+            if(event.isUpdated) {
+                message = getString(R.string.new_article_message);
+            } else {
+                message = getString(R.string.no_new_article_message);
+            }
+
+            Snackbar.make(getView(), message,
+                    Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), ItemProvider.Item.CONTENT_URI, null, null, null, null);
     }
@@ -112,12 +140,12 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.i(LOG_TAG, "onRefresh data count is " + data.getCount());
-        if(data.getCount() > 0) {
+        if (data.getCount() > 0) {
             mCursorAdapter.swapCursor(data);
-            if(mViewSwitcher.getNextView().getId() == R.id.recycler_view) {
+            if (mViewSwitcher.getNextView().getId() == R.id.recycler_view) {
                 mViewSwitcher.showNext();
             }
-        } else if(mViewSwitcher.getNextView().getId() == R.id.recycler_view_empty){
+        } else if (mViewSwitcher.getNextView().getId() == R.id.recycler_view_empty) {
             mViewSwitcher.showNext();
         }
 

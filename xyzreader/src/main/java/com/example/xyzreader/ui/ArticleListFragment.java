@@ -34,6 +34,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.xyzreader.data.ItemColumns.PUBLISHED_DATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -134,7 +136,8 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(), ItemProvider.Item.CONTENT_URI, null, null, null, null);
+        String sortOrder = PUBLISHED_DATE + " DESC";
+        return new CursorLoader(getContext(), ItemProvider.Item.CONTENT_URI, null, null, null, sortOrder);
     }
 
     @Override

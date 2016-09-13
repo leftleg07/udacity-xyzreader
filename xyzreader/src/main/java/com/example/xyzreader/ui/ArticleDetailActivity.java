@@ -11,7 +11,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ItemColumns;
@@ -24,24 +23,20 @@ import static com.example.xyzreader.data.ItemColumns.PUBLISHED_DATE;
 
 public class ArticleDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int ARTICLE_LOADER = 0;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
 
     @BindView(R.id.pager)
     ViewPager mPager;
+
     private String mServerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_article_detail);
+        ButterKnife.bind(this);
 
         Uri uri = getIntent().getData();
         mServerId = ItemProvider.Item.getServerIdFromUri(uri);
-
-        setContentView(R.layout.activity_article_detail);
-        ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportLoaderManager().initLoader(ARTICLE_LOADER, null, this);
     }

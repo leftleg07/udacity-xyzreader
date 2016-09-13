@@ -123,6 +123,7 @@ public class FetchJob extends Job {
                 Uri existingUri = ItemProvider.Item.withServerId(serverId);
                 if (!match.mTitle.equals(title) || !match.mAuthor.equals(author) || !match.mBody.equals(body) || !match.mThumb.equals(thumbUrl)|| !match.mPhoto.equals(photoUrl) || match.mAspectRatio != ratio) {
                     // Update existing record
+                    time.parse3339(match.mPublishedDate);
 
                     Log.i(LOG_TAG, "Scheduling update: " + existingUri);
                     batchOperations.add(ContentProviderOperation.newUpdate(existingUri)
@@ -132,7 +133,7 @@ public class FetchJob extends Job {
                             .withValue(ItemColumns.THUMB_URL, match.mThumb)
                             .withValue(ItemColumns.PHOTO_URL, match.mPhoto)
                             .withValue(ItemColumns.ASPECT_RATIO, match.mAspectRatio)
-                            .withValue(ItemColumns.PUBLISHED_DATE, time.parse3339(match.mPublishedDate))
+                            .withValue(ItemColumns.PUBLISHED_DATE, time.toMillis(false))
                             .build());
                 } else {
                     Log.i(LOG_TAG, "No action: " + existingUri);
@@ -148,6 +149,7 @@ public class FetchJob extends Job {
 
         for (ReaderData entry : entryMap.values()) {
             Log.i(LOG_TAG, "Scheduling insert: entry_id=" + entry.mId);
+            time.parse3339(entry.mPublishedDate);
             batchOperations.add(ContentProviderOperation.newInsert(ItemProvider.Item.CONTENT_URI)
                     .withValue(ItemColumns.SERVER_ID, entry.mId)
                     .withValue(ItemColumns.TITLE, entry.mTitle)
@@ -156,7 +158,7 @@ public class FetchJob extends Job {
                     .withValue(ItemColumns.THUMB_URL, entry.mThumb)
                     .withValue(ItemColumns.PHOTO_URL, entry.mPhoto)
                     .withValue(ItemColumns.ASPECT_RATIO, entry.mAspectRatio)
-                    .withValue(ItemColumns.PUBLISHED_DATE, time.parse3339(entry.mPublishedDate))
+                    .withValue(ItemColumns.PUBLISHED_DATE, time.toMillis(false))
                     .build());
         }
 

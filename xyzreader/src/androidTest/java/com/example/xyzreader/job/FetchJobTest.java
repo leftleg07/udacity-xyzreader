@@ -1,7 +1,6 @@
 package com.example.xyzreader.job;
 
 import android.content.ContentResolver;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -54,17 +53,10 @@ public class FetchJobTest {
 
     @Test
     public void testUpdateJob() throws Exception {
-        mContentResolver.registerContentObserver(ItemProvider.Item.CONTENT_URI, false, new ContentObserver(null) {
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                mSignal.countDown();
-            }
-        });
         mJobManager.addJob(new FetchJob());
         mSignal.await();
         Cursor cursor = mContentResolver.query(ItemProvider.Item.CONTENT_URI, null, null, null, null);
-        assertThat(cursor.getCount()).isGreaterThan(100);
+        assertThat(cursor.getCount()).isGreaterThan(0);
     }
 
     @Subscribe

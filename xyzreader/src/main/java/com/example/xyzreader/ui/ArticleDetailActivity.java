@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -50,7 +50,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
         if (data.getCount() > 0) {
-            PagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            PagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
                 @Override
                 public Fragment getItem(int position) {
@@ -67,16 +67,15 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
             };
             mPager.setAdapter(adapter);
 
-            data.moveToFirst();
-            int item = 0;
-            while (data.moveToNext()) {
+            for(int item = 0; item < data.getCount(); item++) {
+                data.moveToPosition(item);
                 String serverId = data.getString(data.getColumnIndex(ItemColumns.SERVER_ID));
                 if (mServerId.equals(serverId)) {
                     mPager.setCurrentItem(item);
                     break;
                 }
-                item++;
             }
+
         }
 
     }

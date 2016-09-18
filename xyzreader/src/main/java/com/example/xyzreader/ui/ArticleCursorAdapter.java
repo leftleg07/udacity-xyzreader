@@ -44,12 +44,12 @@ public class ArticleCursorAdapter extends CursorRecyclerViewAdapter<ArticleCurso
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final Cursor cursor) {
-
+    public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
+        final String id = cursor.getString(cursor.getColumnIndex(ItemColumns.SERVER_ID));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id = cursor.getString(cursor.getColumnIndex(ItemColumns.SERVER_ID));
+
                 Uri uri = ItemProvider.Item.withServerId(id);
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ArticleDetailActivity.class);

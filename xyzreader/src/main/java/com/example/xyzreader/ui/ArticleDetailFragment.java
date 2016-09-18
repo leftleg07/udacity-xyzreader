@@ -1,17 +1,22 @@
 package com.example.xyzreader.ui;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +47,27 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     @BindView(R.id.image)
     ImageView mImageView;
 
+    @BindView(R.id.article_title)
+    TextView titleView;
+
+    @BindView(R.id.article_byline)
+    TextView bylineView;
+
     @BindView(R.id.article_body)
-    TextView mBodyText;
+    TextView bodyView;
+
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout appBarLayout;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     public ArticleDetailFragment() {
         // Required empty public constructor
@@ -83,7 +101,7 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_article_detail2, container, false);
+        return inflater.inflate(R.layout.fragment_article_detail, container, false);
     }
 
     @Override
@@ -98,6 +116,10 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
                 getActivity().finish();
             }
         });
+
+        titleView.setText("N/A");
+        bylineView.setText("N/A" );
+        bodyView.setText("N/A");
 
     }
 
@@ -118,10 +140,33 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
             data.moveToFirst();
             String title = data.getString(data.getColumnIndex(ItemColumns.TITLE));
             String url = data.getString(data.getColumnIndex(ItemColumns.PHOTO_URL));
-            String body = data.getString(data.getColumnIndex(ItemColumns.BODY));
-            Glide.with(getContext()).load(url).into(mImageView);
-            mBodyText.setText(Html.fromHtml(body));
-            mToolbar.setTitle(title);
+            final String body = data.getString(data.getColumnIndex(ItemColumns.BODY));
+
+            Glide.with(getContext()).load(url).centerCrop().into(mImageView);
+
+            collapsingToolbarLayout.setTitle(title);
+            titleView.setText(title);
+            bylineView.setText(Html.fromHtml(
+                    DateUtils.getRelativeTimeSpanString(
+                            data.getLong(data.getColumnIndex(ItemColumns.PUBLISHED_DATE)),
+                            System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
+                            DateUtils.FORMAT_ABBREV_ALL).toString()
+                            + " by <font color='#ffffff'>"
+                            + data.getString(data.getColumnIndex(ItemColumns.AUTHOR))
+                            + "</font>"));
+            bodyView.setText(Html.fromHtml(body));
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                            .setType("text/plain")
+                            .setText(body)
+                            .getIntent(), getString(R.string.action_share)));
+                }
+            });
+
+
         }
     }
 

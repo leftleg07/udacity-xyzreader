@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by gsshop on 2016. 9. 5..
+ * jobqueue
  */
 @RunWith(AndroidJUnit4.class)
 public class FetchJobTest {

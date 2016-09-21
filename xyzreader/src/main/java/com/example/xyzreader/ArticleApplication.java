@@ -8,9 +8,8 @@ import com.example.xyzreader.di.DaggerApplicationComponent;
 import com.facebook.stetho.Stetho;
 
 /**
- * Created by gsshop on 2016. 9. 5..
+ * application
  */
-
 public class ArticleApplication extends Application {
     public ApplicationComponent getComponent() {
         return component;
@@ -18,10 +17,20 @@ public class ArticleApplication extends Application {
 
     private ApplicationComponent component;
 
+    private static ArticleApplication instance;
+
+    public ArticleApplication() {
+        instance = this;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
         component = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
+    }
+
+    public static ArticleApplication getInstance() {
+        return instance;
     }
 }

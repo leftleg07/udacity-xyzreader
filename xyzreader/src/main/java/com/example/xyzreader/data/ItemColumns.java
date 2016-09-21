@@ -7,9 +7,8 @@ import net.simonvt.schematic.annotation.NotNull;
 import net.simonvt.schematic.annotation.PrimaryKey;
 
 /**
- * Created by gsshop on 2016. 9. 7..
+ * Item table columns
  */
-
 public class ItemColumns {
     /** Type: INTEGER PRIMARY KEY AUTOINCREMENT */
     @DataType(DataType.Type.INTEGER) @PrimaryKey

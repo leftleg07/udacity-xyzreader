@@ -21,6 +21,9 @@ import butterknife.ButterKnife;
 
 import static com.example.xyzreader.data.ItemColumns.PUBLISHED_DATE;
 
+/**
+ * detail activity
+ */
 public class ArticleDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int ARTICLE_LOADER = 0;
 

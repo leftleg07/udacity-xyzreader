@@ -3,7 +3,7 @@ package com.example.xyzreader.network;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by gsshop on 2016. 9. 5..
+ * data model
  */
 
 public class ReaderData {

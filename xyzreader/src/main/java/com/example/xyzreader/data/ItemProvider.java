@@ -11,7 +11,7 @@ import static com.example.xyzreader.data.ItemColumns.SERVER_ID;
 import static com.example.xyzreader.data.ItemContract.TABLE_NAME_ITEM;
 
 /**
- * Created by gsshop on 2016. 9. 7..
+ * content provider
  */
 @ContentProvider(authority = ItemProvider.AUTHORITY, database = ItemDatabase.class)
 public class ItemProvider {

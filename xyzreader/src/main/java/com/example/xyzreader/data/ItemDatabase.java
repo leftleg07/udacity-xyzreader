@@ -6,7 +6,7 @@ import net.simonvt.schematic.annotation.Table;
 import static com.example.xyzreader.data.ItemContract.TABLE_NAME_ITEM;
 
 /**
- * Created by gsshop on 2016. 9. 7..
+ * Item database
  */
 @Database(fileName = ItemContract.DATABASE_NAME, version = ItemContract.DATABASE_VERSION)
 public class ItemDatabase {

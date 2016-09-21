@@ -4,7 +4,7 @@ import retrofit2.http.GET;
 import rx.Observable;
 
 /**
- * Created by gsshop on 2016. 9. 5..
+ * api service
  */
 
 public interface XYZReaderService {

@@ -7,6 +7,9 @@ import com.example.xyzreader.ArticleApplication;
 import com.example.xyzreader.R;
 import com.example.xyzreader.di.ApplicationComponent;
 
+/**
+ * list activity
+ */
 public class ArticleListActivity extends AppCompatActivity {
 
     @Override

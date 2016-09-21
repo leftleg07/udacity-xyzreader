@@ -1,7 +1,7 @@
 package com.example.xyzreader.data;
 
 /**
- * Created by heim on 8/20/16.
+ * Item data
  */
 
 public class ItemContract {

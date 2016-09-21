@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import dagger.internal.Preconditions;
 
 /**
- * Created by gsshop on 2016. 9. 5..
+ * fetch job
  */
 
 public class FetchJob extends Job {

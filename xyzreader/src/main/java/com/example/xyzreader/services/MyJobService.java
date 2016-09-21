@@ -8,11 +8,14 @@ import com.example.xyzreader.ArticleApplication;
 
 import javax.inject.Inject;
 
+/**
+ * job service
+ */
 public class MyJobService extends FrameworkJobSchedulerService {
     @Inject JobManager jobManager;
 
     public MyJobService() {
-        ((ArticleApplication) getApplication()).getComponent().inject(this);
+        ArticleApplication.getInstance().getComponent().inject(this);
     }
 
     @NonNull

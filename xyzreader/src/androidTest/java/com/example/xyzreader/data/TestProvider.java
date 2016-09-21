@@ -21,7 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 /**
- * Created by gsshop on 2016. 9. 7..
+ * Test for content provider
  */
 @RunWith(AndroidJUnit4.class)
 public class TestProvider {
